@@ -9,9 +9,10 @@ namespace CollatzCoreRazorPage.Pages
 {
     public class IndexModel : PageModel
     {
-        public void OnGet()
+    public string CurrentEvenExp { get; set; }
+        public void OnGet(string sortOrder, string evenExp, string currentEvenExp, string oddExp, string currentOddExp, int? page)
         {
-
+            CurrentEvenExp = currentEvenExp;
         }
     }
 }
