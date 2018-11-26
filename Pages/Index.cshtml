@@ -1,7 +1,9 @@
 ﻿@page
 @model IndexModel
+@using X.PagedList.Mvc;
+@using X.PagedList;
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Collatz Conjecture";
 }
 
 <div>
@@ -9,3 +11,77 @@
     <p>@Model.CurrentEvenExp</p>
     <p>@Model.CurrentOddExp</p>
 </div>
+
+<h3>
+    This page is a work in progress. To see the source, check out the <a href="https://github.com/VincentSaelzler/CollatzConjecture">Project on Github</a>
+</h3>
+<h3>
+    For more on Collatz Conjecture, check out this <a href="https://www.youtube.com/watch?v=5mFpVDpKX70">Numberphile Video</a>
+</h3>
+@using (Html.BeginForm("Index", "Home", FormMethod.Get))
+{
+    <p>
+        Even Expression: @Html.TextBox("evenExp", Model.CurrentEvenExp as string)
+        Odd Expression: @Html.TextBox("oddExp", Model.CurrentOddExp as string)
+        <input type="submit" value="Conject" />
+    </p>
+}
+<table class="table">
+    <tr>
+        <th>
+            @Html.ActionLink("Initial Value", "Index", new { sortOrder = Model.TheNumSortParm, currentEvenExp = Model.CurrentEvenExp, currentOddExp = Model.CurrentOddExp })
+        </th>
+        <th>
+            @Html.ActionLink("Total Stopping Time", "Index", new { sortOrder = Model.NumStepsSortParm, currentEvenExp = Model.CurrentEvenExp, currentOddExp = Model.CurrentOddExp })
+        </th>
+        <th>
+            Steps Graph
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model.Sequences)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.InitialValue)
+            </td>
+            <td>
+                @*@Html.DisplayFor(modelItem => item.Steps.Count()) - threw a run time error - both .Count() and .Count threw errors)*@
+                @Html.DisplayFor(modelItem => item.TotalStoppingTime)
+            </td>
+            <td>
+                <canvas id="myChart@(item.InitialValue)" width="100" height="100"></canvas>
+                <script>
+                    var ctx = document.getElementById("myChart@(item.InitialValue)");
+                    var myChart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: [ @item.LegendString],
+                            datasets: [{
+                                label: 'Collatz Series',
+                                data: [ @item.StepsString],
+                            }]
+                        },
+                        options: {
+                            maintainAspectRatio: false,
+                            legend: {
+                                display: false
+                            },
+                            tooltips: {
+                                //enabled: false
+                            }
+                        }
+                    });
+                </script>
+            </td>
+            @*UNDONE: Show drill down details on number
+                <td>
+                    @Html.ActionLink("Details", "Details", new { id = item.StartingNumberId }) |
+                </td>*@
+        </tr>
+    }
+</table>
+
+Page @(Model.Sequences.PageCount < Model.Sequences.PageNumber ? 0 : Model.Sequences.PageNumber) of @Model.Sequences.PageCount
+@X.PagedList.Mvc.Core.HtmlHelper.PagedListPager(Model.Sequences)
