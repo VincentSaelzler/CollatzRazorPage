@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using CollatzCoreRazorPage.Models;
+using X.PagedList;
 
 namespace CollatzCoreRazorPage.Pages
 {
@@ -15,6 +16,8 @@ namespace CollatzCoreRazorPage.Pages
         public string CurrentSort { get; set; }
         public string TheNumSortParm { get; set; }
         public string NumStepsSortParm { get; set; }
+        public IPagedList<CollatzSequence> Sequences { get; set; }
+
         public void OnGet(string sortOrder, string evenExp, string currentEvenExp, string oddExp, string currentOddExp, int? page)
         {
             //UNDONE: allow for actual expression input instead of ints only
@@ -74,7 +77,7 @@ namespace CollatzCoreRazorPage.Pages
             int pageNumber = page ?? 1;
 
             IQueryable<CollatzSequence> orderedCollatzSequencesQuery = orderedCollatzSequences.AsQueryable();
-            //return View(orderedCollatzSequencesQuery.ToPagedList(pageNumber, pageSize));
+            Sequences = orderedCollatzSequencesQuery.ToPagedList(pageNumber, pageSize);
         }
     }
 }
