@@ -1,17 +1,8 @@
 ﻿@page
 @model IndexModel
-@using X.PagedList.Mvc;
-@using X.PagedList;
 @{
     ViewData["Title"] = "Collatz Conjecture";
 }
-
-<div>
-    <p>Hello, World!</p>
-    <p>@Model.CurrentEvenExp</p>
-    <p>@Model.CurrentOddExp</p>
-</div>
-
 <h3>
     This page is a work in progress. To see the source, check out the <a href="https://github.com/VincentSaelzler/CollatzConjecture">Project on Github</a>
 </h3>
@@ -84,4 +75,4 @@
 </table>
 
 Page @(Model.Sequences.PageCount < Model.Sequences.PageNumber ? 0 : Model.Sequences.PageNumber) of @Model.Sequences.PageCount
-@X.PagedList.Mvc.Core.HtmlHelper.PagedListPager(Model.Sequences)
+@X.PagedList.Mvc.Core.HtmlHelper.PagedListPager(Html, Model.Sequences, p => Url.Page("Index", new { pageNumArg = p, sortOrder = Model.CurrentSort, currentEvenExp = Model.CurrentEvenExp, currentOddExp = Model.CurrentOddExp }))

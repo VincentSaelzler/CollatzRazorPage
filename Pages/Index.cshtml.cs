@@ -18,7 +18,7 @@ namespace CollatzCoreRazorPage.Pages
         public string NumStepsSortParm { get; set; }
         public IPagedList<CollatzSequence> Sequences { get; set; }
 
-        public void OnGet(string sortOrder, string evenExp, string currentEvenExp, string oddExp, string currentOddExp, int? page)
+        public void OnGet(string sortOrder, string evenExp, string currentEvenExp, string oddExp, string currentOddExp, int? pageNumArg)
         {
             //UNDONE: allow for actual expression input instead of ints only
             //UNDONE: use floats instead of ints for expression
@@ -26,7 +26,7 @@ namespace CollatzCoreRazorPage.Pages
             //get expressions
             if (evenExp != null)
             {
-                page = 1;
+                pageNumArg = 1;
             }
             else
             {
@@ -36,7 +36,7 @@ namespace CollatzCoreRazorPage.Pages
 
             if (oddExp != null)
             {
-                page = 1;
+                pageNumArg = 1;
             }
             else
             {
@@ -74,7 +74,7 @@ namespace CollatzCoreRazorPage.Pages
             }
 
             int pageSize = 10; //UNDONE: items per page
-            int pageNumber = page ?? 1;
+            int pageNumber = pageNumArg ?? 1;
 
             IQueryable<CollatzSequence> orderedCollatzSequencesQuery = orderedCollatzSequences.AsQueryable();
             Sequences = orderedCollatzSequencesQuery.ToPagedList(pageNumber, pageSize);
