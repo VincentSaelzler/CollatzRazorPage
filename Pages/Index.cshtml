@@ -9,21 +9,20 @@
 <h3>
     For more on Collatz Conjecture, check out this <a href="https://www.youtube.com/watch?v=5mFpVDpKX70">Numberphile Video</a>
 </h3>
-@using (Html.BeginForm("Index", "Home", FormMethod.Get))
-{
+<form asp-page="/Index" method="get">
     <p>
         Even Expression: @Html.TextBox("evenExp", Model.CurrentEvenExp as string)
         Odd Expression: @Html.TextBox("oddExp", Model.CurrentOddExp as string)
         <input type="submit" value="Conject" />
     </p>
-}
+</form>
 <table class="table">
     <tr>
         <th>
-            @Html.ActionLink("Initial Value", "Index", new { sortOrder = Model.TheNumSortParm, currentEvenExp = Model.CurrentEvenExp, currentOddExp = Model.CurrentOddExp })
+            <a asp-page="/Index" asp-route-sortOrder="@Model.TheNumSortParm", asp-route-currentEvenExp="@Model.CurrentEvenExp", asp-route-currentOddExp="@Model.CurrentOddExp">Initial Value</a>
         </th>
         <th>
-            @Html.ActionLink("Total Stopping Time", "Index", new { sortOrder = Model.NumStepsSortParm, currentEvenExp = Model.CurrentEvenExp, currentOddExp = Model.CurrentOddExp })
+            <a asp-page="/Index" asp-route-sortOrder="@Model.NumStepsSortParm", asp-route-currentEvenExp="@Model.CurrentEvenExp", asp-route-currentOddExp="@Model.CurrentOddExp">Total Stopping Time</a>
         </th>
         <th>
             Steps Graph
