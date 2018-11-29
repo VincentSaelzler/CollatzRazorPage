@@ -11,73 +11,75 @@ namespace CollatzCoreRazorPage.Pages
 {
     public class IndexModel : PageModel
     {
-        public string CurrentEvenExp { get; set; }
-        public string CurrentOddExp { get; set; }
-        public string CurrentSort { get; set; }
-        public string TheNumSortParm { get; set; }
-        public string NumStepsSortParm { get; set; }
+        //properties
+        public int EvenExp { get; set; }
+        public int OddExp { get; set; }
+        public string SortOrder { get; set; }
+        public int PageNum { get; set; }
         public IPagedList<CollatzSequence> Sequences { get; set; }
 
-        public void OnGet(string sortOrder, string evenExp, string currentEvenExp, string oddExp, string currentOddExp, int? pageNumArg)
+        //incoming request handlers
+        public void OnGet()
         {
             //UNDONE: allow for actual expression input instead of ints only
             //UNDONE: use floats instead of ints for expression
 
-            //get expressions
-            if (evenExp != null)
-            {
-                pageNumArg = 1;
-            }
-            else
-            {
-                evenExp = currentEvenExp ?? "2";
-            }
-            CurrentEvenExp = evenExp;
+            //set defaults
+            EvenExp = 2;
+            OddExp = 3;
+            SortOrder = "InitValAsc";
+            PageNum = 1;
 
-            if (oddExp != null)
-            {
-                pageNumArg = 1;
-            }
-            else
-            {
-                oddExp = currentOddExp ?? "3";
-            }
-            CurrentOddExp = oddExp;
+            //generate data
+            Sequences = GetSequences();
+        }
 
+        // public void OnGet(string sortOrder, string evenExp, string currentEvenExp, string oddExp, string currentOddExp, int? pageNumArg)
+        // {
+        //     //UNDONE: allow for actual expression input instead of ints only
+        //     //UNDONE: use floats instead of ints for expression
+
+        //     //set defaults
+        //     EvenExp = 2;
+        //     OddExp = 3;
+        //     SortOrder = "InitValAsc";
+        //     PageNum = 1;
+
+        //     //generate data
+        //     Sequences = GetSequences();
+        // }
+        IPagedList<CollatzSequence> GetSequences()
+        {
             //generate data
             IList<CollatzSequence> collatzSequences = new List<CollatzSequence>();
             for (int i = 1; i < 100; i++)
             {
-                collatzSequences.Add(new CollatzSequence(i, int.Parse(evenExp), int.Parse(oddExp))); //TODO: parse error checking
+                collatzSequences.Add(new CollatzSequence(i, EvenExp, OddExp));
             }
 
-            //sort
-            CurrentSort = sortOrder;
-            TheNumSortParm = string.IsNullOrEmpty(sortOrder) ? "thenum_desc" : "";
-            NumStepsSortParm = sortOrder == "numsteps" ? "numsteps_desc" : "numsteps";
-
             IOrderedEnumerable<CollatzSequence> orderedCollatzSequences;
-            switch (sortOrder)
+            switch (SortOrder)
             {
-                case "thenum_desc":
+                case "InitValDsc":
                     orderedCollatzSequences = collatzSequences.OrderByDescending(cs => cs.InitialValue);
                     break;
-                case "numsteps":
-                    orderedCollatzSequences = collatzSequences.OrderBy(cs => cs.TotalStoppingTime); //TODO: use property
+                case "StopTimeAsc":
+                    orderedCollatzSequences = collatzSequences.OrderBy(cs => cs.TotalStoppingTime);
                     break;
-                case "numsteps_desc":
+                case "StopTimeDsc":
                     orderedCollatzSequences = collatzSequences.OrderByDescending(cs => cs.TotalStoppingTime);
                     break;
-                default:
+                case "InitValAsc":
                     orderedCollatzSequences = collatzSequences.OrderBy(cs => cs.InitialValue);
                     break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(SortOrder),SortOrder,"Can't order by that.");
             }
 
             int pageSize = 10; //UNDONE: items per page
-            int pageNumber = pageNumArg ?? 1;
 
             IQueryable<CollatzSequence> orderedCollatzSequencesQuery = orderedCollatzSequences.AsQueryable();
-            Sequences = orderedCollatzSequencesQuery.ToPagedList(pageNumber, pageSize);
+            return orderedCollatzSequencesQuery.ToPagedList(PageNum, pageSize);
         }
     }
 }

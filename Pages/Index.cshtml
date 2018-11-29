@@ -9,20 +9,23 @@
 <h3>
     For more on Collatz Conjecture, check out this <a href="https://www.youtube.com/watch?v=5mFpVDpKX70">Numberphile Video</a>
 </h3>
-<form asp-page="/Index" method="get">
+<form method="get">
     <p>
-        Even Expression: @Html.TextBox("evenExp", Model.CurrentEvenExp as string)
-        Odd Expression: @Html.TextBox("oddExp", Model.CurrentOddExp as string)
+        <!-- form elemnts to save state of form -->
+        <input  id="@Html.IdFor(m => m.SortOrder)" name="@Html.NameFor(m => m.SortOrder)" value="@Model.SortOrder" type="hidden" />
+        <input  id="@Html.IdFor(m => m.PageNum)" name="@Html.NameFor(m => m.PageNum)" value="@Model.PageNum" type="hidden" />
+        <!-- form elemnts to collect input -->
+        Even Expression: <input asp-for="EvenExp" />
+        Odd Expression: <input asp-for="OddExp" />
         <input type="submit" value="Conject" />
     </p>
-</form>
 <table class="table">
     <tr>
         <th>
-            <a asp-page="/Index" asp-route-sortOrder="@Model.TheNumSortParm", asp-route-currentEvenExp="@Model.CurrentEvenExp", asp-route-currentOddExp="@Model.CurrentOddExp">Initial Value</a>
+            <input type="submit" asp-page-handler="SortInitVal" value="Initial Value" />
         </th>
         <th>
-            <a asp-page="/Index" asp-route-sortOrder="@Model.NumStepsSortParm", asp-route-currentEvenExp="@Model.CurrentEvenExp", asp-route-currentOddExp="@Model.CurrentOddExp">Total Stopping Time</a>
+            <input type="submit" asp-page-handler="SortStopTime" value="Total Stopping Time" />
         </th>
         <th>
             Steps Graph
@@ -34,6 +37,7 @@
     {
         <tr>
             <td>
+                <!-- todo: modelitem or i? -->
                 @Html.DisplayFor(modelItem => item.InitialValue)
             </td>
             <td>
@@ -73,5 +77,5 @@
     }
 </table>
 
+</form>
 Page @(Model.Sequences.PageCount < Model.Sequences.PageNumber ? 0 : Model.Sequences.PageNumber) of @Model.Sequences.PageCount
-@X.PagedList.Mvc.Core.HtmlHelper.PagedListPager(Html, Model.Sequences, p => Url.Page("Index", new { pageNumArg = p, sortOrder = Model.CurrentSort, currentEvenExp = Model.CurrentEvenExp, currentOddExp = Model.CurrentOddExp }))
