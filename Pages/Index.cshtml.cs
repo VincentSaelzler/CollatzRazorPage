@@ -12,9 +12,13 @@ namespace CollatzCoreRazorPage.Pages
     public class IndexModel : PageModel
     {
         //properties
+        [BindProperty]
         public int EvenExp { get; set; }
+        [BindProperty]
         public int OddExp { get; set; }
+        [BindProperty]
         public string SortOrder { get; set; }
+        [BindProperty]
         public int PageNum { get; set; }
         public IPagedList<CollatzSequence> Sequences { get; set; }
 
@@ -33,7 +37,31 @@ namespace CollatzCoreRazorPage.Pages
             //generate data
             Sequences = GetSequences();
         }
+        public void OnPost()
+        {
+            //generate data
+            Sequences = GetSequences();
+        }
+        public void OnPostSortInitVal()
+        {
+            if (SortOrder == "InitValAsc")
+            {
+                SortOrder = "InitValDsc";
+            }
+            else
+            {
+                SortOrder = "InitValAsc";
+            }
+            //generate data
+            Sequences = GetSequences();
+        }
+        public void OnPostSortStopTime()
+        {
+            SortOrder = SortOrder == "StopTimeAsc" ? "StopTimeDsc" : "StopTimeAsc";
 
+            //generate data
+            Sequences = GetSequences();
+        }
         // public void OnGet(string sortOrder, string evenExp, string currentEvenExp, string oddExp, string currentOddExp, int? pageNumArg)
         // {
         //     //UNDONE: allow for actual expression input instead of ints only
@@ -73,7 +101,7 @@ namespace CollatzCoreRazorPage.Pages
                     orderedCollatzSequences = collatzSequences.OrderBy(cs => cs.InitialValue);
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(SortOrder),SortOrder,"Can't order by that.");
+                    throw new ArgumentOutOfRangeException(nameof(SortOrder), SortOrder, "Can't order by that.");
             }
 
             int pageSize = 10; //UNDONE: items per page
