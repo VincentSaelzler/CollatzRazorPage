@@ -79,3 +79,4 @@
 
 </form>
 Page @(Model.Sequences.PageCount < Model.Sequences.PageNumber ? 0 : Model.Sequences.PageNumber) of @Model.Sequences.PageCount
+@X.PagedList.Mvc.Core.HtmlHelper.PagedListPager(Html, Model.Sequences, p => Url.Page("Index", new { PageNum = p, SortOrder = Model.SortOrder, EvenExp = Model.EvenExp, OddExp = Model.OddExp, Handler = "PageNum" }))

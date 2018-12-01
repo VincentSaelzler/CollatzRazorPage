@@ -12,13 +12,13 @@ namespace CollatzCoreRazorPage.Pages
     public class IndexModel : PageModel
     {
         //properties
-        [BindProperty]
+        [BindProperty(SupportsGet = true)]
         public int EvenExp { get; set; }
-        [BindProperty]
+        [BindProperty(SupportsGet = true)]
         public int OddExp { get; set; }
-        [BindProperty]
+        [BindProperty(SupportsGet = true)]
         public SortOrders SortOrder { get; set; }
-        [BindProperty]
+        [BindProperty(SupportsGet = true)]
         public int PageNum { get; set; }
         public IPagedList<CollatzSequence> Sequences { get; set; }
         public enum SortOrders { InitValAsc, InitValDsc, StopTimeAsc, StopTimeDsc };
@@ -36,6 +36,13 @@ namespace CollatzCoreRazorPage.Pages
             OddExp = 3;
             SortOrder = SortOrders.InitValAsc;
             PageNum = 1;
+
+            //generate data
+            Sequences = GetSequences();
+        }
+        public void OnGetPageNum()
+        {
+            //model binding should capture all incoming parms via query string parms
 
             //generate data
             Sequences = GetSequences();
