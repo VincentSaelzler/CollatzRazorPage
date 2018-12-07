@@ -3,29 +3,41 @@
 @{
     ViewData["Title"] = "Collatz Conjecture";
 }
-<h3>
-    This page is a work in progress. To see the source, check out the <a href="https://github.com/VincentSaelzler/CollatzConjecture">Project on Github</a>
-</h3>
-<h3>
+<h3>What is Collatz Conjecture?</h3>
+<p><em>It's an unsolved problem in mathematics. The question is: Does the Collatz sequence eventually reach 1 for all positive integer initial values?</em></p>
+<p>It concerns a sequence defined as follows: start with any positive integer n. Then each term is obtained from the previous term as follows: if the previous term is even, the next term is one half the previous term. If the previous term is odd, the next term is 3 times the previous term plus 1. The conjecture is that no matter what value of n, the sequence will always reach 1.</p>
+<p>In other words, for any positive integer:</p>
+<ul>
+    <li>If the number is even, divide it by two.</li>
+    <li>If the number is odd, triple it and add one.</li>
+</ul>
+<p>Thanks to <a href="https://en.wikipedia.org/wiki/Collatz_conjecture">Wikipedia</a> for most of the above content!</p>
+<p>
     For more on Collatz Conjecture, check out this <a href="https://www.youtube.com/watch?v=5mFpVDpKX70">Numberphile Video</a>
-</h3>
+</p>
+<h3>Why did I Make an Application?</h3>
+<p>To use chart.js to visualize the sequence, and to allow experimentation using ASP.NET Core Razor Pages.</p>
+<h3>Let's Experiment!</h3>
 <form method="post">
     <p>
         <!-- form elemnts to save state of form -->
         <input  id="@Html.IdFor(m => m.SortOrder)" name="@Html.NameFor(m => m.SortOrder)" value="@Model.SortOrder" type="hidden" />
         <input  id="@Html.IdFor(m => m.PageNum)" name="@Html.NameFor(m => m.PageNum)" value="@Model.PageNum" type="hidden" />
         <!-- form elemnts to collect input -->
-        Even Expression: <input asp-for="EvenExp" />
-        Odd Expression: <input asp-for="OddExp" />
+        <ul>
+            <li>If the number is even, divide it by <input asp-for="EvenExp" /></li>
+            <li>If the number is odd, multiply by <input asp-for="OddExp" />, and add one.</li>
+        </ul>
         <input type="submit" value="Conject" asp-page-handler=""/>
     </p>
+    <p>Note that when experimenting, integer division rounds down. In other words, 10/4 is 2, and 9/2 is 4.</p>
 <table class="table">
     <tr>
         <th>
-            <input type="submit" asp-page-handler="SortInitVal" value="Initial Value" />
+            <input type="submit" class="btn btn-link" asp-page-handler="SortInitVal" value="Initial Value" />
         </th>
         <th>
-            <input type="submit" asp-page-handler="SortStopTime" value="Total Stopping Time" />
+            <input type="submit" class="btn btn-link" asp-page-handler="SortStopTime" value="Total Stopping Time" />
         </th>
         <th>
             Steps Graph
